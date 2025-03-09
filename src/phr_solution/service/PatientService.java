@@ -11,4 +11,4 @@ public interface PatientService {
 	PatientResponseDto getPatientById(Long id);
 	void updatePatient(Long id, PatientRequestDto dto);
 	void deletePatient(Long id);
-}
+} 
