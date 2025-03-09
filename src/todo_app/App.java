@@ -1,5 +1,6 @@
 package todo_app; // 16
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -82,11 +83,13 @@ public class App {
         UserSignUpRequestDto dto = null;
 
         try {
-            String name = getInput("사용자 이름을 입력하세요");
-            int age = Integer.parseInt(getInput("사용자 나이를 입력하세요"));
+            String username = getInput("사용자 이름을 입력하세요");
+            String password = getInput("사용자 비밀번호를 입력하세요");
+            String phone = getInput("사용자 핸드폰번호를 입력하세요");
             String email = getInput("사용자 이메일을 입력하세요");
+            char gender = getInput("사용자 성별을 입력하세요").charAt(0);
 
-            dto = new UserSignUpRequestDto(name, age, email);
+            dto = new UserSignUpRequestDto(username, password, phone, email, gender);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -98,10 +101,11 @@ public class App {
         UserSignInRequestDto dto = null;
 
         try {
-            String email = getInput("사용자 이메일을 입력하세요");
+        	String email = getInput("사용자 이메일을 입력하세요");
+            Long id = (long) email.hashCode();  // email.hashCode()를 사용하여 이메일을 Long 값으로 변환
             String password = getInput("사용자 비밀번호를 입력하세요");
 
-            dto = new UserSignInRequestDto(email, password);
+            dto = new UserSignInRequestDto(id, password);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -114,11 +118,11 @@ public class App {
 
         try {
             long userId = Long.parseLong(getInput("사용자 ID를 입력하세요"));
-            String taskName = getInput("할 일 제목을 입력하세요");
-            String dueDate = getInput("할 일 마감일을 입력하세요 (예: 2025-02-28)");
-            boolean isCompleted = Boolean.parseBoolean(getInput("할 일을 완료했나요? (true/false)"));
+            String title = getInput("할 일 제목 입력하세요");
+            String content = getInput("할 일 내용을 입력하세요");
+            LocalDate date = LocalDate.parse("할 일 날짜를 입력하세요");
 
-            dto = new TaskRequestDto(userId, taskName, dueDate, isCompleted);
+            dto = new TaskRequestDto(userId, title, content, date);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

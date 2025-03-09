@@ -12,3 +12,4 @@ public class UserSignUpRequestDto {
     private String email;
     private char gender;
 }
+
