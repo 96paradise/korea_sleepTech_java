@@ -28,6 +28,12 @@ public class UserController {
 		return user;
 	}
 	
+	public void updateUser(long id, UserSignUpRequestDto dto) {
+		service.updateUser(id, dto);
+	}
 	
+	public void deleteUser(long id) {
+		service.deleteUser(id);
+	}
 	
 }

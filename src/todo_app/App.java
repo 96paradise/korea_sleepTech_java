@@ -37,149 +37,195 @@ import todo_app.dto.response.UserResponseDto;
 
 
 public class App {
+    private static final Scanner sc = new Scanner(System.in);
+    private static final UserController userController = new UserController();
+    private static final TaskController taskController = new TaskController();
 
-    // UserController와 TaskController 객체 선언
-    private static UserController userController;
-    private static TaskController taskController;
+    // 메뉴를 출력하는 함수
+    private static void displayMenu() {
+        System.out.println("\n[메뉴 선택]");
+        System.out.println("1. 사용자 회원가입");
+        System.out.println("2. 사용자 로그인");
+        System.out.println("3. 사용자 전체 조회");
+        System.out.println("4. 사용자 단건 조회");
+        System.out.println("5. 사용자 수정");
+        System.out.println("6. 사용자 삭제");
+        System.out.println("7. 할 일 추가");
+        System.out.println("8. 할 일 조회");
+        System.out.println("9. 할 일 필터링");
+        System.out.println("10. 할 일 삭제");
+        System.out.println("11. 프로그램 종료");
+        System.out.print("메뉴를 선택하세요: ");
+    }
+
+    // 사용자 입력을 정수로 받는 함수
+    private static int getChoice() {
+        while (!sc.hasNextInt()) {
+            System.out.println("숫자를 입력해주세요.");
+            sc.next();
+        }
+        int choice = sc.nextInt();
+        sc.next(); // 버퍼 처리
+        return choice;
+    }
+
+    // 사용자 입력을 문자열로 받는 함수
+    private static String getInput(String prompt) {
+        System.out.print(prompt + ": ");
+        return sc.nextLine().trim();
+    }
+
+    // 사용자 회원가입을 위한 DTO 생성
+    private static UserSignUpRequest createUserSignUpRequest() {
+        UserSignUpRequest dto = null;
+
+        try {
+            String name = getInput("사용자 이름을 입력하세요");
+            int age = Integer.parseInt(getInput("사용자 나이를 입력하세요"));
+            String email = getInput("사용자 이메일을 입력하세요");
+
+            dto = new UserSignUpRequest(name, age, email);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return dto;
+    }
+
+    // 사용자 로그인 요청 DTO 생성
+    private static UserSignInRequest createUserSignInRequest() {
+        UserSignInRequest dto = null;
+
+        try {
+            String email = getInput("사용자 이메일을 입력하세요");
+            String password = getInput("사용자 비밀번호를 입력하세요");
+
+            dto = new UserSignInRequest(email, password);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return dto;
+    }
+
+    // 할 일 등록을 위한 DTO 생성
+    private static TaskRequestDto createTaskRequest() {
+        TaskRequestDto dto = null;
+
+        try {
+            long userId = Long.parseLong(getInput("사용자 ID를 입력하세요"));
+            String taskName = getInput("할 일 제목을 입력하세요");
+            String dueDate = getInput("할 일 마감일을 입력하세요 (예: 2025-02-28)");
+            boolean isCompleted = Boolean.parseBoolean(getInput("할 일을 완료했나요? (true/false)"));
+
+            dto = new TaskRequestDto(userId, taskName, dueDate, isCompleted);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return dto;
+    }
+
+    // 메뉴 선택 후 기능 처리
+    private static boolean processChoice(int choice) {
+        switch (choice) {
+            // 사용자 관련 기능
+            case 1: { // 사용자 회원가입
+                UserSignUpRequest signUpRequest = createUserSignUpRequest();
+                userController.registerUser(signUpRequest);
+                break;
+            }
+            case 2: { // 사용자 로그인
+                UserSignInRequest signInRequest = createUserSignInRequest();
+                userController.signInUser(signInRequest);
+                break;
+            }
+            case 3: { // 전체 사용자 조회
+                List<UserResponseDto> users = userController.getAllUsers();
+                if (users.isEmpty()) {
+                    System.out.println("사용자 정보가 없습니다.");
+                } else {
+                    users.forEach(System.out::println);
+                }
+                break;
+            }
+            case 4: { // 사용자 단건 조회
+                long id = Long.parseLong(getInput("ID를 입력하세요"));
+                UserResponseDto user = userController.getUserById(id);
+                if (user == null) {
+                    System.out.println("해당하는 ID의 사용자가 없습니다.");
+                } else {
+                    System.out.println(user);
+                }
+                break;
+            }
+            case 5: { // 사용자 수정
+                long id = Long.parseLong(getInput("ID를 입력하세요"));
+                UserSignUpRequest signUpRequest = createUserSignUpRequest();
+                userController.updateUser(id, signUpRequest);
+                break;
+            }
+            case 6: { // 사용자 삭제
+                long id = Long.parseLong(getInput("ID를 입력하세요"));
+                userController.deleteUser(id);
+                break;
+            }
+
+            // 할 일 관련 기능
+            case 7: { // 할 일 추가
+                TaskRequestDto taskRequest = createTaskRequest();
+                taskController.addTask(taskRequest);
+                break;
+            }
+            case 8: { // 할 일 조회
+                List<TaskResponseDto> tasks = taskController.getAllTasks();
+                if (tasks.isEmpty()) {
+                    System.out.println("할 일이 없습니다.");
+                } else {
+                    tasks.forEach(System.out::println);
+                }
+                break;
+            }
+            case 9: { // 할 일 필터링
+                String filter = getInput("필터 조건 (예: 완료 여부, 마감일 등):");
+                List<TaskResponseDto> filteredTasks = taskController.filterTasks(filter);
+                if (filteredTasks.isEmpty()) {
+                    System.out.println("검색 결과를 찾을 수 없습니다.");
+                } else {
+                    filteredTasks.forEach(System.out::println);
+                }
+                break;
+            }
+            case 10: { // 할 일 삭제
+                long id = Long.parseLong(getInput("할 일 ID를 입력하세요"));
+                taskController.deleteTask(id);
+                break;
+            }
+            case 11: { // 종료
+                System.out.println("프로그램을 종료합니다. 이용해주셔서 감사합니다.");
+                return false;
+            }
+            default: { // 잘못된 선택
+                System.out.println("잘못된 선택입니다. 유효한 메뉴를 선택해주세요.");
+                break;
+            }
+        }
+        return true;
+    }
 
     public static void main(String[] args) {
-        // Controller 객체 초기화
-        userController = new UserController();
-        taskController = new TaskController();
+        try {
+            while (true) {
+                displayMenu(); // 프로그램 메뉴 출력
+                int choice = getChoice(); // 사용자 메뉴 선택 저장
 
-        // 애플리케이션 시작 메시지
-        System.out.println("To-Do List Application");
-
-        // 사용자 입력을 받기 위한 Scanner 객체 생성
-        Scanner scanner = new Scanner(System.in);
-
-        // 메인 메뉴 출력
-        while (true) {
-            System.out.println("\n메뉴를 선택하세요:");
-            System.out.println("1. 사용자 등록");
-            System.out.println("2. 모든 사용자 조회");
-            System.out.println("3. 사용자 조회");
-            System.out.println("4. 사용자 수정");
-            System.out.println("5. 사용자 삭제");
-            System.out.println("6. 할 일 등록");
-            System.out.println("7. 특정 사용자 할 일 조회");
-            System.out.println("8. 할 일 조회");
-            System.out.println("9. 할 일 삭제");
-            System.out.println("10. 종료");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Enter key를 소비
-
-            switch (choice) {
-                case 1:
-                    // 사용자 등록
-                    System.out.println("사용자 이름을 입력하세요:");
-                    String username = scanner.nextLine();
-                    System.out.println("비밀번호를 입력하세요:");
-                    String password = scanner.nextLine();
-
-                    UserRequestDto userDto = new UserRequestDto(username, password);
-                    userController.registerUser(userDto);
-                    System.out.println("사용자가 등록되었습니다.");
+                // 사용자의 선택을 처리
+                if (!processChoice(choice))
                     break;
-
-                case 2:
-                    // 모든 사용자 조회
-                    List<UserResponseDto> users = userController.getAllUsers();
-                    for (UserResponseDto user : users) {
-                        System.out.println("ID: " + user.getId() + ", 사용자 이름: " + user.getUsername());
-                    }
-                    break;
-
-                case 3:
-                    // 사용자 조회
-                    System.out.println("사용자 ID를 입력하세요:");
-                    long userId = scanner.nextLong();
-                    UserResponseDto userResponse = userController.getUserById(userId);
-                    if (userResponse != null) {
-                        System.out.println("ID: " + userResponse.getId() + ", 사용자 이름: " + userResponse.getUsername());
-                    } else {
-                        System.out.println("사용자를 찾을 수 없습니다.");
-                    }
-                    break;
-
-                case 4:
-                    // 사용자 수정
-                    System.out.println("수정할 사용자 ID를 입력하세요:");
-                    long updateUserId = scanner.nextLong();
-                    scanner.nextLine(); // Enter key를 소비
-                    System.out.println("새로운 사용자 이름을 입력하세요:");
-                    String newUsername = scanner.nextLine();
-                    System.out.println("새로운 비밀번호를 입력하세요:");
-                    String newPassword = scanner.nextLine();
-
-                    UserRequestDto updateUserDto = new UserRequestDto(newUsername, newPassword);
-                    userController.updateUser(updateUserId, updateUserDto);
-                    System.out.println("사용자가 수정되었습니다.");
-                    break;
-
-                case 5:
-                    // 사용자 삭제
-                    System.out.println("삭제할 사용자 ID를 입력하세요:");
-                    long deleteUserId = scanner.nextLong();
-                    userController.deleteUser(deleteUserId);
-                    System.out.println("사용자가 삭제되었습니다.");
-                    break;
-
-                case 6:
-                    // 할 일 등록
-                    System.out.println("할 일을 등록할 사용자 ID를 입력하세요:");
-                    long taskUserId = scanner.nextLong();
-                    scanner.nextLine(); // Enter key를 소비
-                    System.out.println("할 일 제목을 입력하세요:");
-                    String title = scanner.nextLine();
-                    System.out.println("할 일 설명을 입력하세요:");
-                    String description = scanner.nextLine();
-
-                    TaskRequestDto taskDto = new TaskRequestDto(taskUserId, title, description);
-                    taskController.registerTask(taskDto);
-                    System.out.println("할 일이 등록되었습니다.");
-                    break;
-
-                case 7:
-                    // 특정 사용자 할 일 조회
-                    System.out.println("사용자 ID를 입력하세요:");
-                    long taskUserIdInput = scanner.nextLong();
-                    List<TaskResponseDto> tasks = taskController.getTasksByUserId(taskUserIdInput);
-                    for (TaskResponseDto task : tasks) {
-                        System.out.println("ID: " + task.getId() + ", 제목: " + task.getTitle() + ", 설명: " + task.getDescription());
-                    }
-                    break;
-
-                case 8:
-                    // 할 일 조회
-                    System.out.println("할 일 ID를 입력하세요:");
-                    long taskId = scanner.nextLong();
-                    TaskResponseDto taskResponse = taskController.getTaskById(taskId);
-                    if (taskResponse != null) {
-                        System.out.println("ID: " + taskResponse.getId() + ", 제목: " + taskResponse.getTitle() + ", 설명: " + taskResponse.getDescription());
-                    } else {
-                        System.out.println("할 일을 찾을 수 없습니다.");
-                    }
-                    break;
-
-                case 9:
-                    // 할 일 삭제
-                    System.out.println("삭제할 할 일 ID를 입력하세요:");
-                    long deleteTaskId = scanner.nextLong();
-                    taskController.deleteTask(deleteTaskId);
-                    System.out.println("할 일이 삭제되었습니다.");
-                    break;
-
-                case 10:
-                    // 종료
-                    System.out.println("애플리케이션을 종료합니다.");
-                    scanner.close();
-                    return;
-
-                default:
-                    System.out.println("잘못된 선택입니다. 다시 시도하세요.");
             }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            // 예외 발생과 상관없이 반드시 실행 보장
+            sc.close();
         }
     }
 }
