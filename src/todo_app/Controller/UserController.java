@@ -2,6 +2,7 @@ package todo_app.Controller; // 14
 
 import java.util.List;
 
+import todo_app.dto.request.UserSignInRequestDto;
 import todo_app.dto.request.UserSignUpRequestDto;
 import todo_app.dto.response.UserResponseDto;
 import todo_app.service.UserService;
@@ -34,6 +35,11 @@ public class UserController {
 	
 	public void deleteUser(long id) {
 		service.deleteUser(id);
+	}
+
+	public void signInUser(UserSignInRequestDto signInRequest) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
