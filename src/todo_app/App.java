@@ -6,6 +6,8 @@ import java.util.Scanner;
 import todo_app.Controller.TaskController;
 import todo_app.Controller.UserController;
 import todo_app.dto.request.TaskRequestDto;
+import todo_app.dto.request.UserSignInRequestDto;
+import todo_app.dto.request.UserSignUpRequestDto;
 import todo_app.dto.response.TaskResponseDto;
 import todo_app.dto.response.UserResponseDto;
 
@@ -76,15 +78,15 @@ public class App {
     }
 
     // 사용자 회원가입을 위한 DTO 생성
-    private static UserSignUpRequest createUserSignUpRequest() {
-        UserSignUpRequest dto = null;
+    private static UserSignUpRequestDto createUserSignUpRequest() {
+        UserSignUpRequestDto dto = null;
 
         try {
             String name = getInput("사용자 이름을 입력하세요");
             int age = Integer.parseInt(getInput("사용자 나이를 입력하세요"));
             String email = getInput("사용자 이메일을 입력하세요");
 
-            dto = new UserSignUpRequest(name, age, email);
+            dto = new UserSignUpRequestDto(name, age, email);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -92,14 +94,14 @@ public class App {
     }
 
     // 사용자 로그인 요청 DTO 생성
-    private static UserSignInRequest createUserSignInRequest() {
-        UserSignInRequest dto = null;
+    private static UserSignInRequestDto createUserSignInRequest() {
+        UserSignInRequestDto dto = null;
 
         try {
             String email = getInput("사용자 이메일을 입력하세요");
             String password = getInput("사용자 비밀번호를 입력하세요");
 
-            dto = new UserSignInRequest(email, password);
+            dto = new UserSignInRequestDto(email, password);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -128,12 +130,12 @@ public class App {
         switch (choice) {
             // 사용자 관련 기능
             case 1: { // 사용자 회원가입
-                UserSignUpRequest signUpRequest = createUserSignUpRequest();
+                UserSignUpRequestDto signUpRequest = createUserSignUpRequest();
                 userController.registerUser(signUpRequest);
                 break;
             }
             case 2: { // 사용자 로그인
-                UserSignInRequest signInRequest = createUserSignInRequest();
+                UserSignInRequestDto signInRequest = createUserSignInRequest();
                 userController.signInUser(signInRequest);
                 break;
             }
@@ -158,7 +160,7 @@ public class App {
             }
             case 5: { // 사용자 수정
                 long id = Long.parseLong(getInput("ID를 입력하세요"));
-                UserSignUpRequest signUpRequest = createUserSignUpRequest();
+                UserSignUpRequestDto signUpRequest = createUserSignUpRequest();
                 userController.updateUser(id, signUpRequest);
                 break;
             }
