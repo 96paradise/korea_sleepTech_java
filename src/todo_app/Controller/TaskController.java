@@ -22,18 +22,8 @@ public class TaskController {
 		return service.getAllTasks();
 	}
 	
-	public void deleteTask(long id) {
-		service.deleteTask(id);
+	public void deleteTask(Long id) {
+	    service.deleteTask(id);
 	}
 
-	public List<TaskResponseDto> filterTasks(String filter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void addTask(TaskRequestDto taskRequest) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

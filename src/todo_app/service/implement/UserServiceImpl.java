@@ -3,6 +3,7 @@ package todo_app.service.implement; // 11 구현 클래스 (Impl 클래스): 인
 import java.util.List;
 import java.util.stream.Collectors;
 
+import todo_app.dto.request.UserSignInRequestDto;
 import todo_app.dto.request.UserSignUpRequestDto;
 import todo_app.dto.response.UserResponseDto;
 import todo_app.entity.User;
@@ -57,28 +58,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(Long id, UserSignUpRequestDto dto) {
-        try {
-        	User user = repository.findById(id)
-        			.orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 사용자를 조회할 수 없습니다." + id));
-        	
-        	user.setUsername(dto.getUsername());
-        	user.setPassword(dto.getPassword());
-        	user.setPhone(dto.getPhone());
-        	user.setEmail(dto.getEmail());
-        	user.setGender(dto.getGender());
-        }catch (Exception e) {
-        	System.out.println(e.getMessage());
-        }
+        repository.findById(id).ifPresentOrElse(user -> {
+            User updatedUser = new User(
+                user.getId(), 
+                dto.getPassword(), 
+                dto.getUsername(), 
+                dto.getPhone(), 
+                dto.getEmail(), 
+                dto.getGender()
+            );
+
+            repository.delete(user);
+            repository.save(updatedUser);
+        }, () -> {
+            throw new IllegalArgumentException("해당 ID를 가진 사용자를 찾을 수 없습니다: " + id);
+        });
     }
 
     @Override
     public void deleteUser(Long id) {
-        try {
-        	User user = repository.findById(id)
-        			.orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 사용자를 조회할 수 없습니다." + id));
-        	repository.delete(user);
-        }catch (Exception e) {
-        	System.out.println(e.getMessage());
+        repository.findById(id).ifPresentOrElse(user -> {
+            repository.delete(user);
+        }, () -> {
+            throw new IllegalArgumentException("해당 ID를 가진 사용자를 찾을 수 없습니다: " + id);
+        });
+    }
+
+    @Override
+    public User signIn(UserSignInRequestDto dto) {  
+        User user = repository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 사용자가 존재하지 않습니다."));
+        
+        if (user.getPassword().equals(dto.getPassword())) {
+            return user;
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 }

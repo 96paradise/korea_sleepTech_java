@@ -2,6 +2,7 @@ package todo_app; // 16
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import todo_app.Controller.TaskController;
@@ -40,11 +41,40 @@ import todo_app.dto.response.UserResponseDto;
 
 
 public class App {
-    private static final Scanner sc = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
     private static final UserController userController = new UserController();
     private static final TaskController taskController = new TaskController();
+    private static UserResponseDto loggedInUser = null;
 
-    // 메뉴를 출력하는 함수
+    public static void main(String[] args) {
+        App app = new App();
+        app.run();
+    }
+
+    private void run() {
+        while (true) {
+            displayMenu();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice) {
+                case 1 -> registerUser();
+                case 2 -> signInUser();
+                case 3 -> listAllUsers();
+                case 4 -> getUserById();
+                case 5 -> updateUser();
+                case 6 -> deleteUser();
+                case 7 -> createTask();
+                case 8 -> listAllTasks();
+                case 9 -> deleteTask();
+                case 10 -> {
+                    System.out.println("프로그램을 종료합니다.");
+                    return;
+                }
+                default -> System.out.println("잘못된 입력입니다. 다시 시도하세요.");
+            }
+        }
+    }
+
     private static void displayMenu() {
         System.out.println("\n[메뉴 선택]");
         System.out.println("1. 사용자 회원가입");
@@ -55,183 +85,114 @@ public class App {
         System.out.println("6. 사용자 삭제");
         System.out.println("7. 할 일 추가");
         System.out.println("8. 할 일 조회");
-        System.out.println("9. 할 일 필터링");
-        System.out.println("10. 할 일 삭제");
-        System.out.println("11. 프로그램 종료");
+        System.out.println("9. 할 일 삭제");
+        System.out.println("10. 프로그램 종료");
         System.out.print("메뉴를 선택하세요: ");
     }
 
-    // 사용자 입력을 정수로 받는 함수
-    private static int getChoice() {
-        while (!sc.hasNextInt()) {
-            System.out.println("숫자를 입력해주세요.");
-            sc.next();
-        }
-        int choice = sc.nextInt();
-        sc.next(); // 버퍼 처리
-        return choice;
+    private static void registerUser() {
+        System.out.println("\n=== 회원가입 ===");
+        System.out.print("사용자 이름: ");
+        String username = scanner.nextLine();
+        System.out.print("비밀번호: ");
+        String password = scanner.nextLine();
+        System.out.print("전화번호: ");
+        String phone = scanner.nextLine();
+        System.out.print("이메일: ");
+        String email = scanner.nextLine();
+        System.out.print("성별(M/F): ");
+        String gender = scanner.nextLine();
+
+        UserSignUpRequestDto signUpRequest = new UserSignUpRequestDto(username, password, phone, email, gender);
+        userController.registerUser(signUpRequest);
+        System.out.println("회원가입이 완료되었습니다.");
     }
 
-    // 사용자 입력을 문자열로 받는 함수
-    private static String getInput(String prompt) {
-        System.out.print(prompt + ": ");
-        return sc.nextLine().trim();
-    }
-
-    // 사용자 회원가입을 위한 DTO 생성
-    private static UserSignUpRequestDto createUserSignUpRequest() {
-        UserSignUpRequestDto dto = null;
+    private static void signInUser() {
+        System.out.println("\n=== 로그인 ===");
+        System.out.print("아이디: ");
+        Long userId = scanner.nextLong();
+        scanner.nextLine();
+        System.out.print("비밀번호: ");
+        String password = scanner.nextLine();
 
         try {
-            String username = getInput("사용자 이름을 입력하세요");
-            String password = getInput("사용자 비밀번호를 입력하세요");
-            String phone = getInput("사용자 핸드폰번호를 입력하세요");
-            String email = getInput("사용자 이메일을 입력하세요");
-            char gender = getInput("사용자 성별을 입력하세요").charAt(0);
-
-            dto = new UserSignUpRequestDto(username, password, phone, email, gender);
+            loggedInUser = userController.signIn(new UserSignInRequestDto(userId, password));
+            System.out.println(loggedInUser.getUsername() + "님, 로그인되었습니다.");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("로그인 실패: " + e.getMessage());
         }
-        return dto;
     }
 
-    // 사용자 로그인 요청 DTO 생성
-    private static UserSignInRequestDto createUserSignInRequest() {
-        UserSignInRequestDto dto = null;
-
-        try {
-        	String email = getInput("사용자 이메일을 입력하세요");
-            Long id = (long) email.hashCode();  // email.hashCode()를 사용하여 이메일을 Long 값으로 변환
-            String password = getInput("사용자 비밀번호를 입력하세요");
-
-            dto = new UserSignInRequestDto(id, password);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return dto;
+    private static void listAllUsers() {
+        System.out.println("\n=== 사용자 목록 ===");
+        List<UserResponseDto> users = userController.getAllUsers();
+        users.forEach(user -> System.out.println("ID: " + user.getId() + ", 이름: " + user.getUsername()));
     }
 
-    // 할 일 등록을 위한 DTO 생성
-    private static TaskRequestDto createTaskRequest() {
-        TaskRequestDto dto = null;
-
-        try {
-            long userId = Long.parseLong(getInput("사용자 ID를 입력하세요"));
-            String title = getInput("할 일 제목 입력하세요");
-            String content = getInput("할 일 내용을 입력하세요");
-            LocalDate date = LocalDate.parse("할 일 날짜를 입력하세요");
-
-            dto = new TaskRequestDto(userId, title, content, date);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    private static void getUserById() {
+        System.out.print("\n조회할 사용자 ID: ");
+        Long userId = scanner.nextLong();
+        scanner.nextLine();
+        UserResponseDto user = userController.getUserById(userId);
+        if (user != null) {
+            System.out.println("ID: " + user.getId() + ", 이름: " + user.getUsername());
+        } else {
+            System.out.println("사용자를 찾을 수 없습니다.");
         }
-        return dto;
     }
 
-    // 메뉴 선택 후 기능 처리
-    private static boolean processChoice(int choice) {
-        switch (choice) {
-            // 사용자 관련 기능
-            case 1: { // 사용자 회원가입
-                UserSignUpRequestDto signUpRequest = createUserSignUpRequest();
-                userController.registerUser(signUpRequest);
-                break;
-            }
-            case 2: { // 사용자 로그인
-                UserSignInRequestDto signInRequest = createUserSignInRequest();
-                userController.signInUser(signInRequest);
-                break;
-            }
-            case 3: { // 전체 사용자 조회
-                List<UserResponseDto> users = userController.getAllUsers();
-                if (users.isEmpty()) {
-                    System.out.println("사용자 정보가 없습니다.");
-                } else {
-                    users.forEach(System.out::println);
-                }
-                break;
-            }
-            case 4: { // 사용자 단건 조회
-                long id = Long.parseLong(getInput("ID를 입력하세요"));
-                UserResponseDto user = userController.getUserById(id);
-                if (user == null) {
-                    System.out.println("해당하는 ID의 사용자가 없습니다.");
-                } else {
-                    System.out.println(user);
-                }
-                break;
-            }
-            case 5: { // 사용자 수정
-                long id = Long.parseLong(getInput("ID를 입력하세요"));
-                UserSignUpRequestDto signUpRequest = createUserSignUpRequest();
-                userController.updateUser(id, signUpRequest);
-                break;
-            }
-            case 6: { // 사용자 삭제
-                long id = Long.parseLong(getInput("ID를 입력하세요"));
-                userController.deleteUser(id);
-                break;
-            }
+    private static void updateUser() {
+        System.out.print("\n수정할 사용자 ID: ");
+        Long userId = scanner.nextLong();
+        scanner.nextLine();
+        System.out.print("새 사용자 이름: ");
+        String newUsername = scanner.nextLine();
+        System.out.print("새 비밀번호: ");
+        String newPassword = scanner.nextLine();
 
-            // 할 일 관련 기능
-            case 7: { // 할 일 추가
-                TaskRequestDto taskRequest = createTaskRequest();
-                taskController.addTask(taskRequest);
-                break;
-            }
-            case 8: { // 할 일 조회
-                List<TaskResponseDto> tasks = taskController.getAllTasks();
-                if (tasks.isEmpty()) {
-                    System.out.println("할 일이 없습니다.");
-                } else {
-                    tasks.forEach(System.out::println);
-                }
-                break;
-            }
-            case 9: { // 할 일 필터링
-                String filter = getInput("필터 조건 (예: 완료 여부, 마감일 등):");
-                List<TaskResponseDto> filteredTasks = taskController.filterTasks(filter);
-                if (filteredTasks.isEmpty()) {
-                    System.out.println("검색 결과를 찾을 수 없습니다.");
-                } else {
-                    filteredTasks.forEach(System.out::println);
-                }
-                break;
-            }
-            case 10: { // 할 일 삭제
-                long id = Long.parseLong(getInput("할 일 ID를 입력하세요"));
-                taskController.deleteTask(id);
-                break;
-            }
-            case 11: { // 종료
-                System.out.println("프로그램을 종료합니다. 이용해주셔서 감사합니다.");
-                return false;
-            }
-            default: { // 잘못된 선택
-                System.out.println("잘못된 선택입니다. 유효한 메뉴를 선택해주세요.");
-                break;
-            }
-        }
-        return true;
+        userController.updateUser(userId, new UserSignUpRequestDto(newUsername, newPassword, "", "", ""));
+        System.out.println("사용자가 수정되었습니다.");
     }
 
-    public static void main(String[] args) {
-        try {
-            while (true) {
-                displayMenu(); // 프로그램 메뉴 출력
-                int choice = getChoice(); // 사용자 메뉴 선택 저장
+    private static void deleteUser() {
+        System.out.print("\n삭제할 사용자 ID: ");
+        Long userId = scanner.nextLong();
+        userController.deleteUser(userId);
+        System.out.println("사용자가 삭제되었습니다.");
+    }
 
-                // 사용자의 선택을 처리
-                if (!processChoice(choice))
-                    break;
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            // 예외 발생과 상관없이 반드시 실행 보장
-            sc.close();
+    private static void createTask() {
+        if (loggedInUser == null) {
+            System.out.println("먼저 로그인 해주세요.");
+            return;
         }
+
+        System.out.println("\n=== 할 일 추가 ===");
+        System.out.print("할 일 제목: ");
+        String title = scanner.nextLine();
+        System.out.print("할 일 내용: ");
+        String content = scanner.nextLine();
+        System.out.print("날짜 (YYYY-MM-DD): ");
+        LocalDate date = LocalDate.parse(scanner.nextLine());
+
+        System.out.println("로그인된 사용자 ID: " + loggedInUser.getId());
+
+        TaskRequestDto taskRequest = new TaskRequestDto(loggedInUser.getId(), title, content, date);
+        taskController.createTask(taskRequest);
+        System.out.println("할 일이 추가되었습니다.");
+    }
+
+    private static void listAllTasks() {
+        System.out.println("\n=== 할 일 목록 ===");
+        List<TaskResponseDto> tasks = taskController.getAllTasks();
+        tasks.forEach(task -> System.out.println("ID: " + task.getId() + ", 제목: " + task.getTitle() + ", 날짜: " + task.getDate()));
+    }
+
+    private static void deleteTask() {
+        System.out.print("\n삭제할 할 일 ID: ");
+        Long taskId = scanner.nextLong();
+        taskController.deleteTask(taskId);
+        System.out.println("할 일이 삭제되었습니다.");
     }
 }

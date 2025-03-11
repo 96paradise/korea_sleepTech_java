@@ -2,8 +2,10 @@ package todo_app.service; // 10 인터페이스 (Service 인터페이스): 기�
 
 import java.util.List;
 
+import todo_app.dto.request.UserSignInRequestDto;
 import todo_app.dto.request.UserSignUpRequestDto;
 import todo_app.dto.response.UserResponseDto;
+import todo_app.entity.User;
 
 
 public interface UserService {
@@ -12,4 +14,5 @@ public interface UserService {
     UserResponseDto getUserById(Long id);
     void updateUser(Long id, UserSignUpRequestDto dto);
     void deleteUser(Long id);
+    User signIn(UserSignInRequestDto dto);
 }

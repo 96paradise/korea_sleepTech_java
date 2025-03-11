@@ -29,10 +29,11 @@ public class TaskRepository {
     }
     
     public List<Task> taskAll() {
-    	return tasks;
+        return new ArrayList<>(tasks);
     }
     
-    public void delete(Task task) {
-    	tasks.remove(task);
+    public void delete(Long id) {
+        tasks.removeIf(task -> task.getId().equals(id));
     }
+
 }

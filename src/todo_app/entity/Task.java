@@ -11,5 +11,5 @@ public class Task {
     private Long id;        
     private String title;   
     private String content;
-    private LocalDate date; // date는 String보다 LocalDate씀
+    private LocalDate date;
 }
