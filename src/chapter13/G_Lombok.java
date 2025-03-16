@@ -17,7 +17,7 @@ class LombokExample {
 public class G_Lombok {
 	public static void main(String[] args) {
 		LombokExample lombokExample = new LombokExample();
-		lombokExample.setName("이승아");
+		lombokExample.setName("이순신");
 		lombokExample.setAge(123);
 		
 		System.out.println(lombokExample.getName());

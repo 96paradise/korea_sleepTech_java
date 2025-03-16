@@ -89,18 +89,18 @@ public class H_Lombok {
 	public static void main(String[] args) {
 //		LombokClass lombokClass = new LombokClass();
 //		lombokClass.setTitle("백설공주");
-//		lombokClass.setAuthor("이도경");
+//		lombokClass.setAuthor("이성계");
 //		System.out.println(lombokClass);
-		// LombokClass(title=백설공주, author=이도경)
+		// LombokClass(title=백설공주, author=이성계)
 		
 		// LombokClass lombokClass1 = new LombokClass("백설공주");
 		// lombokClass1.setTitle("신데렐라");
 		// : @Setter는 final 필드에 대해서 메서드 생성 X
 		
-		LombokClass lombokClass2 = new LombokClass("신데렐라", "이승아");
+		LombokClass lombokClass2 = new LombokClass("신데렐라", "이순신");
 		
 		// System.out.println(lombokClass1); // LombokClass(title=백설공주, author=null)
-		System.out.println(lombokClass2); // LombokClass(title=신데렐라, author=이승아)
+		System.out.println(lombokClass2); // LombokClass(title=신데렐라, author=이순신)
 		
 		LombokClass lombokClass3 = LombokClass.builder()
 				.author("루피")

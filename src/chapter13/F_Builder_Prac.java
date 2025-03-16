@@ -52,7 +52,7 @@ class GameCharacter {
 	}
 }
 
-public class F_Builder {
+public class F_Builder_Prac {
 	public static void main(String[] args) {
 		GameCharacter pororo = new GameCharacter.Builder("뽀로로", "팽귄")
 				.skill("크롱 놀리기")
