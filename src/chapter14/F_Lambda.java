@@ -73,7 +73,7 @@ public class F_Lambda {
 		
 		// 3. 생성자 참조
 		// 1) 람다 표현식
-		Supplier<Person> personLambda = () -> new Person("이승아");
+		Supplier<Person> personLambda = () -> new Person("이순신");
 		// 2) 메서드 참조
 		// : 매개변수가 없는 생성자일 경우에만 활용 가능
 		Supplier<Person> personLambdaRef = Person::new;
@@ -81,7 +81,7 @@ public class F_Lambda {
 		Person p1 = personLambda.get();
 		Person p2 = personLambdaRef.get();
 		
-		System.out.println(p1.getName()); // 이승아
+		System.out.println(p1.getName()); // 이순신
 		System.out.println(p2.getName()); // 이름 미상
 	}
 }

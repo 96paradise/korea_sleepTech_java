@@ -45,13 +45,13 @@ public class G_Stream {
 	public static void main(String[] args) {
 		List<String> names = new ArrayList<String>();
 		
-		names.add("이승아");
-		names.add("조승범");
-		names.add("진상영");
-		names.add("이은우");
-		names.add("윤안나");
+		names.add("박지성");
+		names.add("박주영");
+		names.add("기성용");
+		names.add("손흥민");
+		names.add("김민재");
 		
-		System.out.println(names); // [이승아, 조승범, 진상영, 이은우, 윤안나]
+		System.out.println(names); // [박지성, 박주영, 기성용, 손흥민, 김민재]
 		
 		// 1. 데이터 소스(Stream 생성)
 		// 데이터.stream()

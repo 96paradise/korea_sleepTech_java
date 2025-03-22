@@ -1,4 +1,3 @@
-
 package chapter14;
 
 import java.util.HashMap;
@@ -80,7 +79,7 @@ public class E_Lambda {
 		Function<Integer, Integer> square = n -> n * n;
 		Function<String, String> upperString = s -> s.toUpperCase();
 		
-		System.out.println(stringLength.apply("이도경 메롱"));
+		System.out.println(stringLength.apply("이강인 메롱"));
 		System.out.println(upperString.apply("nice to meet you"));
 		
 		Function<String, Integer> lengthAndSquare = stringLength.andThen(square);
@@ -123,9 +122,9 @@ public class E_Lambda {
 		
 		// == Map 활용 람다식 == //
 		Map<String, Integer> scores = new HashMap<>();
-		scores.put("이승아", 90);
-		scores.put("이도경", 100);
-		scores.put("이지희", 95);
+		scores.put("이순신", 90);
+		scores.put("김유신", 100);
+		scores.put("홍길동", 95);
 		
 		scores.forEach((name, score) -> System.out.println(name + ": " + score));
 	}

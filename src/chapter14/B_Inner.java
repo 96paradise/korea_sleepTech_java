@@ -46,8 +46,8 @@ public class B_Inner {
 		
 		// @롬복어노테이션생성자
 		// : 필드값 순서대로 매개변수 값을 설정 - 타입 유의!!
-		School.Student student1 = school.new Student(43, "이승아");
-		student1.displayInfo(); // 학교명: 유성 초등학교, 학생 이름: 이승아
+		School.Student student1 = school.new Student(43, "이순신");
+		student1.displayInfo(); // 학교명: 유성 초등학교, 학생 이름: 이순신
 		
 		// Principal 클래스: 정적 내부 클래스
 		// - 외부 클래스 인스턴스 없이 사용 가능: static 메서드 호출 가능
