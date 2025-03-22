@@ -3,10 +3,25 @@ package test;
 import java.util.Scanner;
 
 class Student {
-	String name;
-	int score;
-}
+    private String name; // 이름
+    private int score;   // 점수
 
+    // 생성자
+    public Student(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    // 이름을 반환하는 메서드
+    public String getName() {
+        return name;
+    }
+
+    // 점수를 반환하는 메서드
+    public int getScore() {
+        return score;
+    }
+}
 public class JavaTest_최낙원 {
 	public static void main(String[] args) {
 		// 1. 서술형
@@ -58,25 +73,25 @@ public class JavaTest_최낙원 {
 			System.out.println(i+1);
 		}
 		
-//		// 5. 코드 구현 문제
-//		Student student = new Student();{
-//			this.name;
-//			this.score;
-//		}
-//		
-//		ArrayList<student> {
-//			"John" = 85, 
-//			"Jane" = 92, 
-//			"Tom" = 78, 
-//			"Emily"=88, 
-//			"Alex"=95;
-//		}
-//		
-//		if(student<=90) {
-//			System.out.println("90점 이상인 학생힙니다");
-//		} else {
-//			System.out.println("90점이 안 됩니다.");
-//		}
+		// 5. 코드 구현 문제
+	        // 1. Student 객체 배열 생성 및 초기화
+	        Student[] students = {
+	            new Student("이승아", 85),
+	            new Student("이도경", 92),
+	            new Student("이지희", 78),
+	            new Student("이지훈", 88),
+	            new Student("김명진", 95)
+	        };
+
+	        // 2. 점수가 90점 이상인 학생의 이름 출력
+	        System.out.println("90점 이상인 학생:");
+	        for (Student student : students) {
+	            if (student.getScore() >= 90) {
+	                System.out.println(student.getName());
+	            }
+	        }
+	    }
+	
 				
 		// 6. 단답형 : Object
 		// 7. 단답형 : 크기?,개수? size()
