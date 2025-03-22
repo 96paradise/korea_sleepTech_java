@@ -55,7 +55,7 @@ public class JavaTest_최낙원 {
 		
 		// 3. 코드 구현 문제
 		Scanner scanner = new Scanner(System.in);
-		
+		System.out.print("숫자를 입력하세요: ");
 		int num = scanner.nextInt();
 		
 		if(num % 2 == 0) {
@@ -67,10 +67,18 @@ public class JavaTest_최낙원 {
 		scanner.close();
 		
 		// 4. 코드 구현 문제
-		int[] numbers = {1,2,3,4,5};
+//		int[] numbers = {1,2,3,4,5};
+//		
+//		for(int i=0; i<numbers.length; i++) {
+//			System.out.println(i+1);
+//		}
 		
-		for(int i=0; i<numbers.length; i++) {
-			System.out.println(i+1);
+		// == 배열 선언 및 초기화 ==
+		int[] number = {1, 2, 3, 4, 5};
+
+		// for-each 반복문을 사용하여 배열 요소 출력
+		for (int Num : number) {
+		    System.out.print(Num);
 		}
 		
 		// 5. 코드 구현 문제
@@ -108,4 +116,4 @@ public class JavaTest_최낙원 {
 		// 18. 추상 클래스와 인터페이스 차이점 (맞지 않는 것) : 4. 추상 클래스는 정적 메서드를 가질 수 없다
 
 	}
-}
+
