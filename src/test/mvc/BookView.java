@@ -1,4 +1,4 @@
-package test;
+package test.mvc;
 
 import java.util.List;
 import java.util.Scanner;

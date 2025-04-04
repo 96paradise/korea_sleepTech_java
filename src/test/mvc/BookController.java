@@ -1,4 +1,4 @@
-package test;
+package test.mvc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +34,4 @@ public class BookController {
 		}
 		return result;
 	}
-	
 }

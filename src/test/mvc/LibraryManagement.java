@@ -1,4 +1,4 @@
-package test;
+package test.mvc;
 
 public class LibraryManagement {
 	public static void main(String[] args) {
