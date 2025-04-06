@@ -10,7 +10,7 @@
 //         **
 //          *
 
-package test.practice;
+package test.practice.chapter02;
 
 public class Star3 {
 	public static void main(String[] args) {

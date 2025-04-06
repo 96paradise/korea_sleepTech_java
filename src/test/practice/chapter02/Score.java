@@ -1,4 +1,4 @@
-package test.practice;
+package test.practice.chapter02;
 
 /* 
 1. 점수에 따른 학점 출력 (if, else if, else 사용)

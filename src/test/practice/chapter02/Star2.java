@@ -6,7 +6,7 @@
 	    *****
 */
 
-package test.practice;
+package test.practice.chapter02;
 
 public class Star2 {
 	public static void main(String[] args) {
