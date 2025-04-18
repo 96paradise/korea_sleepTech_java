@@ -64,7 +64,4 @@ class Baseballplayer {
 			System.out.println(Baseballplayer.evaluateHomeRun(player4.homeRuns));
 			
 		}
-
 	}
-
-}
