@@ -20,7 +20,6 @@ class Person {
 	}
 }
 
-
 public class 인스턴스_클래스_변수2 {
 	public static void main(String[] args) {
 		Person honggildong = new Person("홍길동", 20);
