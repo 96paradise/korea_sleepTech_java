@@ -53,7 +53,7 @@ public class E_Class_Type {
 		// : '부모 클래스 타입으로 변환된 객체를' 다시 자식 클래스 타입으로 변환하는 것
 		// - 자식 클래스에만 정의된 멤버에 다시 접근 가능
 		
-		// 자식ㅌ타입 객체변수 = (자식타입) 부모객체;
+		// 자식타입 객체변수 = (자식타입) 부모객체;
 		Child child = (Child) parentObject;
 		child.displayInfo(); // 자식 클래스입니다.(재정의)
 		child.childMethod(); // 자식 클래스만이 가진 메서드입니다.
